@@ -13,8 +13,18 @@ public class Sumple1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _fadeManager =GameObject.Find("FadeManager").GetComponent<FadeManager>();
+        //これでフェードマネージャーを取れる
+        _fadeManager =Fade_Singleton.Instance.Manager;
 
-        _button.onClick.AddListener(()=>_ = _fadeManager.Fade<Enum>("SumpleScene2",endOrigin:Vertical.Top,startColor:_startColor,midColor:_midColor,midColor2:_mid2Color,endColor:_endColor));
+        _button.onClick.AddListener(() =>
+            //↓このように呼び出す
+            _ = _fadeManager.Fade<Enum>("SumpleScene2",
+                                        endOrigin: Vertical.Top,
+                                        startColor: _startColor,
+                                        midColor: _midColor,
+                                        midColor2: _mid2Color,
+                                        endColor: _endColor
+                                        )
+            );
     }
 }

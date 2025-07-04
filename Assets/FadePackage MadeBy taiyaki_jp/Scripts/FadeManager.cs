@@ -2,11 +2,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class FadeManager : MonoBehaviour
 {
     [SerializeField, Header("フェード速度")] private float _fadeSpeed=1;
-    private GameObject _fadeCanvas;
+    [SerializeField] private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 
     System.Action BeforeAction=null;
@@ -15,11 +16,10 @@ public class FadeManager : MonoBehaviour
 
     private void Start()
     {
-        _fadeCanvas = Fade_Singleton.Canvas;
 
         _load = new FadeAndLoad
         {
-            Image = Fade_Singleton.FadeImage,
+            Image = _fadeCanvas.GetComponentInChildren<Image>(),
             Speed = _fadeSpeed
         };
 
@@ -64,7 +64,6 @@ public class FadeManager : MonoBehaviour
         if(endOrigin==null&&endColor==default)endColor=Color.clear;
         else if(endColor==default)endColor=Color.black;
 
-        _fadeCanvas = Fade_Singleton.Canvas;
         _fadeCanvas.SetActive(true);
         Color finalMid = midColor;
 

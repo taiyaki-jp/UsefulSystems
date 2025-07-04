@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Fade_Singleton : MonoBehaviour
 {
     private static Fade_Singleton _instanceClosed;
-
-    private static Image _image;
-    private static GameObject _canvas;
-
+    [SerializeField]private FadeManager _fadeManager;
+    public FadeManager Manager => this._fadeManager;
     private static bool _isFirst;
 
     private void Awake()
@@ -26,26 +23,16 @@ public class Fade_Singleton : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);//それをシーンを跨ぐ様にする
 
             //↓初期化処理
-            _image = GetComponentInChildren<Image>();
-            _canvas = GetComponentInChildren<Canvas>().gameObject;
             _isFirst = true;
         }
     }
     private Fade_Singleton() { }//外部からの生成をブロック
 
-    public static Image FadeImage
-    {
-        get { return _image; }
-    }
-
-    public static GameObject Canvas
-    {
-        get { return _canvas; }
-    }
+    public static Fade_Singleton Instance => _instanceClosed;
 
     public static bool IsFirst
     {
-        get { return _isFirst; }
-        set { _isFirst = value; }
+        get => _isFirst;
+        set => _isFirst = value;
     }
 }
