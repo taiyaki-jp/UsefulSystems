@@ -35,9 +35,9 @@ public class FadeManager : MonoBehaviour
     /// </summary>
     private async UniTask FirstFade()
     {
-        AfterAction.Invoke();
+        AfterAction?.Invoke();
         await _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
-        FinishAction.Invoke();
+        FinishAction?.Invoke();
 
         _fadeCanvas.SetActive(false);
     }
@@ -68,7 +68,7 @@ public class FadeManager : MonoBehaviour
         Color finalMid = midColor;
 
         await _load.FadeSystem(+1,startColor,midColor,startOrigin);
-        BeforeAction.Invoke();
+        BeforeAction?.Invoke();
         if (midColor2 != default)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
@@ -78,10 +78,10 @@ public class FadeManager : MonoBehaviour
         }
 
         await SceneManager.LoadSceneAsync(sceneName);
-        AfterAction.Invoke();
+        AfterAction?.Invoke();
 
         await _load.FadeSystem(-1,finalMid,endColor,endOrigin);
-        FinishAction.Invoke();
+        FinishAction?.Invoke();
 
         _fadeCanvas.SetActive(false);
     }
