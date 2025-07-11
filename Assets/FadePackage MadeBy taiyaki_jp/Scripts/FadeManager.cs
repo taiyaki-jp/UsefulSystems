@@ -2,11 +2,12 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class FadeManager : MonoBehaviour
 {
     [SerializeField, Header("フェード速度")] private float _fadeSpeed=1;
-    private GameObject _fadeCanvas;
+    [SerializeField]private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 
     System.Action BeforeAction=null;
@@ -17,11 +18,10 @@ public class FadeManager : MonoBehaviour
 
     private void Start()
     {
-        _fadeCanvas = Fade_Singleton.Canvas;
 
         _load = new FadeAndLoad
         {
-            Image = Fade_Singleton.FadeImage,
+            Image = _fadeCanvas.GetComponentInChildren<Image>(),
             Speed = _fadeSpeed
         };
 
@@ -37,9 +37,9 @@ public class FadeManager : MonoBehaviour
     /// </summary>
     private IEnumerator FirstFade()
     {
-        //AfterAction.Invoke();
+        AfterAction?.Invoke();
         yield return _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
-        //FinishAction.Invoke();
+        FinishAction?.Invoke();
 
         _fadeCanvas.SetActive(false);
         Stop();
@@ -71,12 +71,11 @@ public class FadeManager : MonoBehaviour
     private IEnumerator FadeCor<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color startColor,Color midColor,Color midColor2,Color endColor)where TOriginEnum : Enum
     {
 
-        _fadeCanvas = Fade_Singleton.Canvas;
         _fadeCanvas.SetActive(true);
         Color finalMid = midColor;
 
         yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(+1, startColor, midColor, startOrigin));
-        //BeforeAction.Invoke();
+        BeforeAction?.Invoke();
         Stop();
         if (midColor2 != default)
         {
@@ -88,10 +87,10 @@ public class FadeManager : MonoBehaviour
         }
 
         yield return SceneManager.LoadSceneAsync(sceneName);
-        //AfterAction.Invoke();
+        AfterAction?.Invoke();
 
         yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(-1, finalMid, endColor, endOrigin));
-        //FinishAction.Invoke();
+        FinishAction?.Invoke();
         Stop();
 
         _fadeCanvas.SetActive(false);
