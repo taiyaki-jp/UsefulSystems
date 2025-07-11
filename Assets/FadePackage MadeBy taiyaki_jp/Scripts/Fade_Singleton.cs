@@ -26,7 +26,7 @@ public class Fade_Singleton : MonoBehaviour
             _isFirst = true;
         }
     }
-    private Fade_Singleton() { }//外部からの生成をブロック
+    private Fade_Singleton() {}//外部からの生成をブロック
 
     public static Fade_Singleton Instance => _instanceClosed;
 
