@@ -1,0 +1,36 @@
+using UnityEngine;
+
+public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
+{
+    private static T _instance;
+
+    public static T Instance
+    {
+        get
+        {
+            if (_instance == null)//初回はこっちに入る
+            {
+                var obj = FindObjectOfType<T>();//Tを探してくる
+                if (obj == null)//なければエラー
+                    Debug.LogError(typeof(T) + "をアタッチしてあるGameObjectがないよー");
+                else//あればインスタンスに
+                    _instance = obj;
+            }
+            return _instance;//二回目以降はすぐこれ
+        }
+    }
+
+    //よくあるシングルトンAwake
+    protected virtual void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this as T;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+}
