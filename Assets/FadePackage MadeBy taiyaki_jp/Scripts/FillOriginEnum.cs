@@ -33,3 +33,10 @@ public enum Radial_360
     Top,
     Right,
 }
+
+public enum FadeActionMode
+{
+    BeforeFade,
+    AfterFade,
+    FinishFade
+}

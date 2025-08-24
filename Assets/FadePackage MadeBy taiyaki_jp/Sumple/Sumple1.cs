@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class Sumple1 : MonoBehaviour
 {
     private FadeManager _fadeManager;

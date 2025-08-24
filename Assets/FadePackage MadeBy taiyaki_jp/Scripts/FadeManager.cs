@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static FadeActionMode;//これがあるとAction設定のときにタイミング指定で補完が出るよ
 
 public class FadeManager : SingletonBase<FadeManager>
 {
@@ -17,19 +18,19 @@ public class FadeManager : SingletonBase<FadeManager>
     /// <summary>
     /// 外部からActionを設定する
     /// </summary>
-    /// <param name="mode">0=画面暗転後　1=画面遷移直後　2=フェード終了後</param>
+    /// <param name="timing">フェードのどのタイミングで実行するか</param>
     /// <param name="action">設定する関数</param>
-    public void AddAction(int mode, Action action)
+    public void AddAction(FadeActionMode timing, Action action)
     {
-        switch (mode)
+        switch (timing)
         {
-            case 0:
+            case BeforeFade:
                 _beforeAction += action;
                 break;
-            case 1:
+            case AfterFade:
                 _afterAction += action;
                 break;
-            default:
+            case FinishFade:
                 _finishAction += action;
                 break;
         }
@@ -38,19 +39,19 @@ public class FadeManager : SingletonBase<FadeManager>
     /// <summary>
     /// 外部から設定したActionを削除する
     /// </summary>
-    /// <param name="mode">0=画面暗転後　1=画面遷移直後　2=フェード終了後</param>
-    /// <param name="action">設定する関数</param>
-    public void RemoveAction(int mode, Action action)
+    /// <param name="timing">フェードのどのタイミングで実行するようにしたか</param>
+    /// <param name="action">削除する関数</param>
+    public void RemoveAction(FadeActionMode timing, Action action)
     {
-        switch (mode)
+        switch (timing)
         {
-            case 0:
+            case BeforeFade:
                 _beforeAction -= action;
                 break;
-            case 1:
+            case AfterFade:
                 _afterAction -= action;
                 break;
-            case 2:
+            case FinishFade:
                 _finishAction -= action;
                 break;
         }
