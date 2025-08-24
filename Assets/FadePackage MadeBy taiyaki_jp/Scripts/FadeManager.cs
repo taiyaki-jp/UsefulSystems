@@ -3,33 +3,76 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static FadeActionMode;
 
-public class FadeManager : MonoBehaviour
+public class FadeManager : SingletonBase<FadeManager>
 {
     [SerializeField, Header("フェード速度")] private float _fadeSpeed=1;
     [SerializeField]private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 
-    System.Action BeforeAction=null;
-    System.Action AfterAction=null;
-    System.Action FinishAction = null;
+    Action _beforeAction=null;
+    Action _afterAction=null;
+    Action _finishAction = null;
 
     Coroutine _fadeCoroutine;
 
-    private void Start()
+    /// <summary>
+    /// 外部からActionを設定する
+    /// </summary>
+    /// <param name="timing">フェードのどのタイミングで実行するか</param>
+    /// <param name="action">設定する関数</param>
+    public void AddAction(FadeActionMode timing, Action action)
     {
+        switch (timing)
+        {
+            case BeforeFade:
+                _beforeAction += action;
+                break;
+            case AfterFade:
+                _afterAction += action;
+                break;
+            case FinishFade:
+                _finishAction += action;
+                break;
+        }
+    }
 
+    /// <summary>
+    /// 外部から設定したActionを削除する
+    /// </summary>
+    /// <param name="timing">フェードのどのタイミングで実行するようにしたか</param>
+    /// <param name="action">削除する関数</param>
+    public void RemoveAction(FadeActionMode timing, Action action)
+    {
+        switch (timing)
+        {
+            case BeforeFade:
+                _beforeAction -= action;
+                break;
+            case AfterFade:
+                _afterAction -= action;
+                break;
+            case FinishFade:
+                _finishAction -= action;
+                break;
+        }
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();//SingletonBaseのAwakeを実行
         _load = new FadeAndLoad
         {
             Image = _fadeCanvas.GetComponentInChildren<Image>(),
             Speed = _fadeSpeed
         };
 
-        if (Fade_Singleton.IsFirst)
-        {
-            _fadeCoroutine = StartCoroutine(FirstFade());
-            Fade_Singleton.IsFirst = false;
-        }
+    }
+
+    private void Start()
+    {
+        _ = FirstFade();
     }
 
     /// <summary>
@@ -37,9 +80,9 @@ public class FadeManager : MonoBehaviour
     /// </summary>
     private IEnumerator FirstFade()
     {
-        AfterAction?.Invoke();
+        _afterAction?.Invoke();
         yield return _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
-        FinishAction?.Invoke();
+        _finishAction?.Invoke();
 
         _fadeCanvas.SetActive(false);
         Stop();
@@ -75,7 +118,7 @@ public class FadeManager : MonoBehaviour
         Color finalMid = midColor;
 
         yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(+1, startColor, midColor, startOrigin));
-        BeforeAction?.Invoke();
+        _beforeAction?.Invoke();
         Stop();
         if (midColor2 != default)
         {
@@ -87,10 +130,10 @@ public class FadeManager : MonoBehaviour
         }
 
         yield return SceneManager.LoadSceneAsync(sceneName);
-        AfterAction?.Invoke();
+        _afterAction?.Invoke();
 
         yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(-1, finalMid, endColor, endOrigin));
-        FinishAction?.Invoke();
+        _finishAction?.Invoke();
         Stop();
 
         _fadeCanvas.SetActive(false);

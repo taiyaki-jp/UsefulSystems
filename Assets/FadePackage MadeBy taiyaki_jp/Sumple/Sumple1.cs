@@ -16,7 +16,7 @@ public class Sumple1 : MonoBehaviour
     void Start()
     {
         //これでフェードマネージャーを取れる
-        _fadeManager = Fade_Singleton.Instance.Manager;
+        _fadeManager = FadeManager.Instance;
 
         //このように呼び出す
         _button.onClick.AddListener(() =>
