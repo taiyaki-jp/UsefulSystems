@@ -8,7 +8,7 @@ public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (_instance == null)//初回はこっちに入る
+            if (_instance == null)//インスタンスがなければこっちに入る
             {
                 var obj = FindObjectOfType<T>();//Tを探してくる
                 if (obj == null)//なければエラー
@@ -16,7 +16,7 @@ public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
                 else//あればインスタンスに
                     _instance = obj;
             }
-            return _instance;//二回目以降はすぐこれ
+            return _instance;//基本すぐこれ
         }
     }
 
