@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using FadeOrigins;
 using UnityEngine;
 using UnityEngine.UI;
 
