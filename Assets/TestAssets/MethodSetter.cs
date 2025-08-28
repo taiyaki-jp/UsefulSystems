@@ -5,15 +5,18 @@ using FadeOrigins;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Originsetter : MonoBehaviour
+public class MethodSetter : MonoBehaviour
 {
     [SerializeField] private Dropdown _originDropdown;
     [SerializeField] private bool _canSkip;
     private Dropdown _thisDropdown;
+    private OriginSetter _originsetter;
 
     private void Awake()
     {
         _thisDropdown = GetComponent<Dropdown>();
+        _originsetter = _originDropdown.gameObject.GetComponent<OriginSetter>();
+
         _thisDropdown.ClearOptions();
         List<string> methodList = new List<string>();
 
@@ -31,14 +34,16 @@ public class Originsetter : MonoBehaviour
 
     private void Start()
     {
-        OnValueChange();
-        _thisDropdown.onValueChanged.AddListener((i) => OnValueChange());
+        OnValueChange(0);
+        _thisDropdown.onValueChanged.AddListener(OnValueChange);
     }
 
-    private void OnValueChange()
+    private void OnValueChange(int value)
     {
         _originDropdown.ClearOptions();
-        if (_thisDropdown.value == 0)
+        _originsetter.UsingMethod = value;
+
+        if (value == 0)
         {
             _originDropdown.interactable = false;
             return;
@@ -46,7 +51,7 @@ public class Originsetter : MonoBehaviour
 
         _originDropdown.interactable = true;
         var originList = new List<string>();
-        switch (_thisDropdown.value)
+        switch (value)
         {
             case 1:
             {
