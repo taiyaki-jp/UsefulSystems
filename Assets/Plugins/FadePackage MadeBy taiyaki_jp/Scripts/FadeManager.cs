@@ -100,13 +100,14 @@ public class FadeManager : SingletonBase<FadeManager>
     public async UniTask Fade<TOriginEnum>(string sceneName, TOriginEnum startOrigin = default, TOriginEnum endOrigin = default, Color startColor = default, Color midColor = default, Color midColor2 = default, Color endColor = default) where TOriginEnum : Enum
     {
         //defaultを変換
-        if (startOrigin == null && startColor == default) startColor = Color.clear;
-        else　if (startColor == default) startColor = Color.black;
+        if (startColor == default) startColor = Color.black;//色省略なら黒に
+        if (startOrigin == null) startColor = new Color (startColor.r,startColor.g,startColor.b,0f);//origin省略なら透明に
+        
 
-        if (midColor == default) midColor = Color.black;
+        if (midColor == default) midColor = Color.black;//色省略なら黒に
 
-        if (endOrigin == null && endColor == default) endColor = Color.clear;
-        else if (endColor == default) endColor = Color.black;
+        if (endColor == default) endColor = Color.black;//色省略なら黒に
+        if (endOrigin == null) endColor = new Color(endColor.r, endColor.g, endColor.b, 0f);//origin省略なら透明に
 
         _fadeCanvas.SetActive(true);
         Color finalMid = midColor;

@@ -3,13 +3,17 @@ using UnityEngine.UI;
 
 public class RGBColorPicker : MonoBehaviour
 {
-    [Header("Sliders")]
+    [Header("スライダー")]
     [SerializeField]private Slider _rSlider;
     [SerializeField]private Slider _gSlider;
     [SerializeField]private Slider _bSlider;
-
-    [Header("Target")]
+    [Header("チェックボックス")]
+    [SerializeField]private Toggle _isSkip;
+    [Header("Image")]
     [SerializeField]private Image _targetImage;
+
+    private Color _color;
+    public Color UseColor { get => _color; }
 
     void Start()
     {
@@ -25,6 +29,28 @@ public class RGBColorPicker : MonoBehaviour
 
         // 初期色を反映
         UpdateColor();
+
+        if (_isSkip == null) return;
+        _isSkip.isOn = true;
+        _isSkip.onValueChanged.AddListener(Boolchenged);
+        Boolchenged(true);
+    }
+
+    private void Boolchenged(bool condition)
+    {
+        if (condition)
+        {
+            _rSlider.interactable = false;
+            _gSlider.interactable = false;
+            _bSlider.interactable = false;
+            _color = default;
+        }
+        else
+        {
+            _rSlider.interactable= true;
+            _gSlider.interactable= true;
+            _bSlider.interactable= true;
+        }
     }
 
     void UpdateColor()
@@ -33,7 +59,9 @@ public class RGBColorPicker : MonoBehaviour
         float g = _gSlider.value / 255f;
         float b = _bSlider.value / 255f;
 
-        if (_targetImage != null)
-            _targetImage.color = new Color(r, g, b, 1f);
+        _color = new Color(r, g, b, 1f);
+
+        if (_targetImage != null) _targetImage.color = _color;
+        
     }
 }

@@ -15,6 +15,7 @@ public class OriginSetter : MonoBehaviour
         }
     }
     private Enum _usingOrigin;
+    public Enum UseOrigin { get => _usingOrigin;}
 
     private void Awake()
     {
@@ -43,10 +44,10 @@ public class OriginSetter : MonoBehaviour
                 _usingOrigin = (Radial_360)value;
                 break;
             default:
-                _usingOrigin = null;
+                _usingOrigin = default;
                 break;
         }
-        if(_usingOrigin!=null) Debug.Log(_usingOrigin.ToString());
+        if(_usingOrigin!=default) Debug.Log(_usingOrigin.ToString());
         else Debug.Log("Origin not set");
     }
 }
