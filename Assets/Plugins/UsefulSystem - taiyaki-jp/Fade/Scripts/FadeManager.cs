@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UsefulSystem.Common;
 using static FadeActionMode;//これがあるとAction設定のときにタイミング指定で補完が出るよ
 
 public class FadeManager : SingletonBase<FadeManager>
