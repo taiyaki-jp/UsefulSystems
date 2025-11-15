@@ -133,4 +133,20 @@ public class FadeManager : SingletonBase<FadeManager>
 
         _fadeCanvas.SetActive(false);
     }
+
+    /// <summary>
+    /// フェードで画面を隠した後にゲームを終了する
+    /// Editorでも問題なく終了します
+    /// </summary>
+    public async void GameEndFade()
+    {
+        _fadeCanvas.SetActive(true);
+        await _load.FadeSystem<Enum>(+1,Color.black,Color.black);
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }
